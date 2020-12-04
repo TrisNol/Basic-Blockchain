@@ -1,0 +1,20 @@
+<form>
+  <mat-form-field>
+    <mat-label>Author</mat-label>
+    <input matInput [(ngModel)]="author" [ngModelOptions]="{standalone: true}">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Content</mat-label>
+    <input matInput [(ngModel)]="content" [ngModelOptions]="{standalone: true}">
+  </mat-form-field>
+</form>
+
+<button mat-button (click)="sendToBlockchain()">Post</button>
+<button mat-button (click)="mine()">Mine</button>
+<button mat-button (click)="updateChain()">Update Chain</button>
+
+<mat-list *ngFor="let transaction of transactions">
+  <mat-list-item>{{transaction.author}}: {{transaction.content}}</mat-list-item>
+</mat-list>
+
+
