@@ -1,5 +1,6 @@
 from model.Block import Block
 from model.Blockchain import Blockchain
+from utils.Encryption import Encryption
 
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
@@ -12,6 +13,7 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 blockchain = Blockchain()
+encryption = Encryption()
 
 peers = set()
 

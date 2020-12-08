@@ -3,9 +3,8 @@ from Crypto.Cipher import PKCS1_OAEP
 from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA512, SHA384, SHA256, SHA, MD5
 from Crypto import Random
-from base64 import b64encode, b64decode
 
-class Encryption():
+class Encryption:
     key = None
     hash = SHA512.new()
 
@@ -16,7 +15,7 @@ class Encryption():
             print(self.key.exportKey(format='PEM'))
         else:
             random_generator = Random.new().read
-            self.key  = RSA.generate(1024, random_generator) #generate pub and priv key
+            self.key  = RSA.generate(2048, random_generator) #generate pub and priv key
 
             f = open("./utils/private.pem", "wb")
             f.write(self.key.exportKey('PEM'))
@@ -43,7 +42,3 @@ class Encryption():
         signer = PKCS1_v1_5.new(pub_key)
         self.hash.update(message)
         return signer.verify(self.hash, signature)
-
-if __name__ == "__main__":
-    enc = Encryption(path="./utils/private.pem")
-    # enc = Encryption()
