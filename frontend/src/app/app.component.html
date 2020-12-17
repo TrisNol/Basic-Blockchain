@@ -1,11 +1,15 @@
 <form>
   <mat-form-field>
     <mat-label>Author</mat-label>
-    <input matInput [(ngModel)]="author" [ngModelOptions]="{standalone: true}">
+    <input matInput [(ngModel)]="transaction.source" [ngModelOptions]="{standalone: true}">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Recipient</mat-label>
+    <input matInput [(ngModel)]="transaction.target" [ngModelOptions]="{standalone: true}">
   </mat-form-field>
   <mat-form-field>
     <mat-label>Content</mat-label>
-    <input matInput [(ngModel)]="content" [ngModelOptions]="{standalone: true}">
+    <input matInput [(ngModel)]="transaction.content" [ngModelOptions]="{standalone: true}">
   </mat-form-field>
 </form>
 
@@ -14,7 +18,7 @@
 <button mat-button (click)="updateChain()">Update Chain</button>
 
 <mat-list *ngFor="let transaction of transactions">
-  <mat-list-item>{{transaction.author}}: {{transaction.content}}</mat-list-item>
+  <mat-list-item>{{transaction.source}} to {{transaction.target}}: {{transaction.content}}</mat-list-item>
 </mat-list>
 
 

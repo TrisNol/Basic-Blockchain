@@ -7,13 +7,14 @@ from flask_cors import CORS, cross_origin
 import requests
 import time
 import json
+import copy
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 blockchain = Blockchain()
-encryption = Encryption()
+encryption = Encryption(path="./utils/private.pem")
 
 peers = set()
 
@@ -75,13 +76,17 @@ def create_chain_from_dump(chain_dump):
 @cross_origin()
 def new_transaction():
     tx_data = request.get_json()
-    required_fields = ['author','content']
+    required_fields = ['target', 'content']
 
     for field in required_fields:
         if not tx_data.get(field):
             return "Invalid transaction data", 404
     
     tx_data['timestamp'] = time.time()
+
+    target_pub_key = '-----BEGIN PUBLIC KEY-----\n' + tx_data['target'] + '\n-----END PUBLIC KEY-----'
+    tx_data['content'] = encryption.encrypt(tx_data['content'], target_pub_key)
+    tx_data['signature'] = encryption.sign(tx_data['content'])
 
     blockchain.add_new_transaction(tx_data)
     return "Success", 200
@@ -90,7 +95,11 @@ def new_transaction():
 @cross_origin()
 def get_chain():
     chain_data = []
-    for block in blockchain.chain:
+    blocks = copy.deepcopy(blockchain.chain)
+    for block in blocks:
+        for transaction in block.transactions:
+            if(transaction['target'] == "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyxOruBRpnBIARAQsX+ky f+orZBqnHDOej9l6lZU6/lCAF17j/guakFlh5n1D0YiEFX73GHSgq2azfag5Qmw7 Pw6/LyhKhNFvjZarMZHoKCDShzYcEy2xxcEJbtTDWR8GuFwxNrHy/fygkBvZelml ++gIMkfHjJhJssHaHAEU/2yilBr/DMnM4oLH2vgLJPylF6vdumw8xEa8jQa7t9Ld 2JLdZbMY6cyHaVTAoKpsx0drbiLlUWhVJYeZt1+3+vMKujJ1uILTlnSB7q4WWrwy p+MKWRXxyTk4NZlGme5S3ITPlwjNgYfO2kV0eWAiq0IQJWcoaQE9QipP/S1FDGao RQIDAQAB"):
+                transaction['content'] = encryption.decrypt(transaction['content'])
         chain_data.append(block.__dict__)
     chain = {"length": len(chain_data), "chain": chain_data}
     return json.dumps(chain)

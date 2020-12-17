@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Transaction } from './models/Transaction';
 import { BlockchainService } from './services/blockchain.service';
 
 @Component({
@@ -9,17 +10,16 @@ import { BlockchainService } from './services/blockchain.service';
 export class AppComponent {
   title = 'blockchain-frontend';
 
-  author = "";
-  content = "";
+  transaction: Transaction =  {target: "", content: ""};
 
-  transactions = []
+  transactions: Transaction[] = []
 
   constructor(public blockchainService: BlockchainService) {
 
   }
 
   public sendToBlockchain() {
-    this.blockchainService.createTransaction(this.author, this.content)
+    this.blockchainService.createTransaction(this.transaction.target, this.transaction.content)
   }
 
   public mine() {
