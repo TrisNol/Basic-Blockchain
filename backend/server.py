@@ -84,7 +84,7 @@ def new_transaction():
     
     tx_data['timestamp'] = time.time()
 
-    target_pub_key = '-----BEGIN PUBLIC KEY-----\n' + tx_data['target'] + '\n-----END PUBLIC KEY-----'
+    target_pub_key = encryption.convertStringToPubKey(tx_data['target'])
     tx_data['content'] = encryption.encrypt(tx_data['content'], target_pub_key)
     tx_data['signature'] = encryption.sign(tx_data['content'])
 
@@ -97,12 +97,23 @@ def get_chain():
     chain_data = []
     blocks = copy.deepcopy(blockchain.chain)
     for block in blocks:
-        for transaction in block.transactions:
-            if(transaction['target'] == "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyxOruBRpnBIARAQsX+ky f+orZBqnHDOej9l6lZU6/lCAF17j/guakFlh5n1D0YiEFX73GHSgq2azfag5Qmw7 Pw6/LyhKhNFvjZarMZHoKCDShzYcEy2xxcEJbtTDWR8GuFwxNrHy/fygkBvZelml ++gIMkfHjJhJssHaHAEU/2yilBr/DMnM4oLH2vgLJPylF6vdumw8xEa8jQa7t9Ld 2JLdZbMY6cyHaVTAoKpsx0drbiLlUWhVJYeZt1+3+vMKujJ1uILTlnSB7q4WWrwy p+MKWRXxyTk4NZlGme5S3ITPlwjNgYfO2kV0eWAiq0IQJWcoaQE9QipP/S1FDGao RQIDAQAB"):
-                transaction['content'] = encryption.decrypt(transaction['content'])
         chain_data.append(block.__dict__)
     chain = {"length": len(chain_data), "chain": chain_data}
     return json.dumps(chain)
+
+@app.route("/my_transactions", methods=['GET'])
+@cross_origin()
+def get_my_transactions():
+    chain_data = []
+    blocks = copy.deepcopy(blockchain.chain)
+    for block in blocks:
+        for transaction in block.transactions:
+            if(transaction['target'] == encryption.getPublicKey()):
+                transaction['content'] = encryption.decrypt(transaction['content'])
+                chain_data.append(block.__dict__)
+    chain = {"length": len(chain_data), "chain": chain_data}
+    return json.dumps(chain)
+
 
 @app.route("/mine", methods=['GET'])
 @cross_origin()

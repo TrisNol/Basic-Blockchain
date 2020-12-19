@@ -25,6 +25,6 @@ export class BlockchainService {
   }
 
   public updateChain(): Observable<any> {
-    return this.http.get(environment.backend + "/chain", { responseType: 'text' })
+    return this.http.get(environment.backend + "/my_transactions", { responseType: 'text' })
   }
 }

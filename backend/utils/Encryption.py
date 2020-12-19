@@ -50,7 +50,16 @@ class Encryption:
         return str(signer.sign(self.hash))
 
     def verify(self, message, signature, pub_key):
-
         signer = PKCS1_v1_5.new(pub_key)
         self.hash.update(message)
         return signer.verify(self.hash, signature)
+
+    def convertStringToPubKey(self, pub_key_string):
+        return ('-----BEGIN PUBLIC KEY-----\n' + pub_key_string + '\n-----END PUBLIC KEY-----')
+
+    def getPublicKey(self):
+        key = self.key.publickey().exportKey('PEM').decode()
+        key = key.replace('-----BEGIN RSA PUBLIC KEY-----\n', '')
+        key = key.replace('\n-----END RSA PUBLIC KEY-----', '')
+        key = key.replace('\n', ' ')
+        return key
