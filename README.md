@@ -4,3 +4,4 @@ The python backend contains the blockchain itself. Using the Angular frontend tr
 
 I added some features such as asymetric encryption and digital signatures.
 
+

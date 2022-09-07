@@ -8,6 +8,9 @@ import { BlockchainService } from './services/blockchain.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
+  // TODO
+  // Move encryption from server-side to End-To-End
   title = 'blockchain-frontend';
 
   transaction: Transaction =  {target: "", content: ""};

@@ -9,6 +9,9 @@ import time
 import json
 import copy
 
+# TODO
+# Move encryption from server-side to End-To-End
+
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
