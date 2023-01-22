@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+
+  backend:
+    container_name: basic_blockchain_backend
+    hostname: basic_blockchain_backend
+    build: ./backend
+    # image: ghcr.io/trisnol/basic-blockchain-backend
+
+    ports:
+      - 8000:8000
+    restart: unless-stopped
+
+  frontend:
+    container_name: basic_blockchain_frontend
+    hostname: basic_blockchain_frontend
+    build: ./frontend
+    # image: ghcr.io/trisnol/basic-blockchain-frontend
+    ports:
+      - 80:80
+    restart: unless-stopped
+    environment:
+      - BACKEND=http://localhost:8000
+    depends_on:
+      - backend
